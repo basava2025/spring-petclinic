@@ -28,9 +28,15 @@ spec:
         - name: JAVA_TOOL_OPTIONS
           value: "-Xmx256m -Xms128m"
 
+        # ✅ PostgreSQL configuration (FIXED)
         - name: SPRING_DATASOURCE_URL
-          value: jdbc:mysql://demo-db:3306/petclinic
+          value: jdbc:postgresql://demo-db:5432/petclinic
+
         - name: SPRING_DATASOURCE_USERNAME
-          value: root
+          value: user
+
         - name: SPRING_DATASOURCE_PASSWORD
-          value: root
+          value: pass
+
+        - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+          value: org.postgresql.Driver
