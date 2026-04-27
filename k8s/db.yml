@@ -1,17 +1,12 @@
----
 apiVersion: v1
 kind: Secret
 metadata:
   name: demo-db
-type: servicebinding.io/postgresql
+type: Opaque
 stringData:
-  type: "postgresql"
-  provider: "postgresql"
-  host: "demo-db"
-  port: "5432"
-  database: "petclinic"
-  username: "user"
-  password: "pass"
+  username: user
+  password: pass
+  database: petclinic
 
 ---
 apiVersion: v1
@@ -41,33 +36,26 @@ spec:
         app: demo-db
     spec:
       containers:
-        - image: postgres:18.3
-          name: postgresql
-          env:
-            - name: POSTGRES_USER
-              valueFrom:
-                secretKeyRef:
-                  name: demo-db
-                  key: username
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: demo-db
-                  key: password
-            - name: POSTGRES_DB
-              valueFrom:
-                secretKeyRef:
-                  name: demo-db
-                  key: database
-          ports:
-            - containerPort: 5432
-              name: postgresql
-          livenessProbe:
-            tcpSocket:
-              port: postgresql
-          readinessProbe:
-            tcpSocket:
-              port: postgresql
-          startupProbe:
-            tcpSocket:
-              port: postgresql
+      - name: postgres
+        image: postgres:15
+        ports:
+        - containerPort: 5432
+
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: demo-db
+              key: username
+
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: demo-db
+              key: password
+
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: demo-db
+              key: database
